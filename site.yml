@@ -1,0 +1,49 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (Ubuntu)
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+
+  - name: install updates (Astra)
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution_release == "orel"
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+      
+  - name: install apache and php for Debian family
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution in ["Ubuntu", "Debian"]
+
+  - name: instal apache and php for Astra
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution_release == "orel"
+
+- hosts: db_servers
+  become: true
+  tasks:
+  
+  - name: install mariadb package (Ubuntu)
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
