@@ -1,0 +1,13 @@
+---
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: Copy aliases from primary server
+    copy:
+      src: ~/Projects/bash_scripts/alias_add.sh
+      dest: /home/miro/
+      owner: miro
+      group: miro
+      mode: "0777"
+
